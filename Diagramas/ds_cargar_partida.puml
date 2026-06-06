@@ -1,0 +1,129 @@
+@startuml ds_cargar_partida
+' =====================================================================
+'  Diagrama de secuencia 1) Cargar la partida, el avion e iniciar el juego
+'  Modulo Skyhawk 1942 - Algoritmos I (LCD)
+'  Notacion segun GUIA_DIAGRAMAS_UML.md (catedra). Fiel al codigo:
+'    HomeJuego.java, Skyhawk_AvionSkyhawk.pde, Skyhawk_GameController.pde,
+'    ControladorNavegacion.java, los *State.java.
+' =====================================================================
+
+' ===== estilo catedra (secuencia) =====
+skinparam shadowing false
+skinparam sequenceMessageAlign first
+skinparam sequence {
+  ArrowColor Black
+  LifeLineBorderColor Black
+  LifeLineBackgroundColor White
+  ParticipantBackgroundColor White
+  ParticipantBorderColor Black
+  ActorBackgroundColor White
+  ActorBorderColor Black
+}
+skinparam defaultFontName Arial
+' ======================================
+
+actor Jugador
+participant ":HomeJuego" as Home
+participant ":GestorModulos" as Gestor
+participant ":AvionSkyhawk" as Mod
+participant "estadoActual:EstadoJuego" as Estado
+participant ":ControladorNavegacion" as Nav
+' :GameController, :Skyhawk y :Enemigo se crean en la Fase B (create),
+' por eso NO se declaran arriba: aparecen a la altura de su <<create>>.
+
+' =====================================================================
+' FASE A - Seleccion e iniciar (un clic / ENTER)
+' =====================================================================
+Jugador -> Home : manejarClick(mx, my)
+activate Home
+
+Home -> Home : seleccionarModulo("Skyhawk 1942")
+activate Home
+
+Home -> Gestor : buscarModulo("Skyhawk 1942")
+activate Gestor
+Gestor --> Home : modulo
+deactivate Gestor
+
+Home -> Mod : reset()
+note right of Mod : estadoActual = NoIniciadoState\ngame = null, observers.clear()
+Home -> Mod : agregarObserver(home)
+Home -> Mod : inicializarContexto(ctx)
+
+Home -> Mod : iniciar()
+activate Mod
+Mod -> Estado : iniciar(modulo)
+activate Estado
+note right of Estado : NoIniciadoState: transicion valida\n(no lanza EstadoInvalidoException)
+Estado --> Mod
+deactivate Estado
+note right of Mod : estadoActual = new IniciandoState()\ntiempoInicioCarga = now
+Mod -> Home : onEventoModulo(INICIADO, "Cargando...")
+note right of Home : notificacion Observer (via notificar());\nel Home reacciona pero aun no crea la partida
+activate Home
+Home --> Mod
+deactivate Home
+Mod --> Home
+deactivate Mod
+
+Home -> Nav : iniciarModulo(modulo)
+activate Nav
+note right of Nav : pantallaActual = JUEGO
+Nav --> Home
+deactivate Nav
+
+Home --> Home
+deactivate Home
+deactivate Home
+
+' =====================================================================
+' FASE B - Carga diferida dentro del loop draw() (60 fps)
+' =====================================================================
+loop cada frame mientras estadoActual sea IniciandoState
+    Home -> Mod : actualizar(app)
+    activate Mod
+
+    alt [now - tiempoInicioCarga < TIEMPO_CARGA_MS (600 ms)]
+        note right of Mod : sigue mostrando el splash "CARGANDO..."
+    else [now - tiempoInicioCarga >= 600 ms]
+        create Game
+        Mod -> Game : <<create>>
+        activate Game
+
+        create Sky
+        Game -> Sky : <<create>> Skyhawk(width/2, height-80)
+        note right of Sky : vida = 3, velocidad = 5\nloadImage("SkyhawkSprite.png")
+
+        Game -> Game : crearEnemigos()
+        activate Game
+        loop i = 0..4 (crea 5 enemigos)
+            create Enem
+            Game -> Enem : <<create>> Enemigo(x, y)
+            note right of Enem : vida = 1, velocidad = 2\nx = 100 + i*100, y = -i*120\nloadImage("EnemigoSprite.png")
+        end
+        Game --> Game
+        deactivate Game
+
+        Game --> Mod : game
+        deactivate Game
+
+        note right of Mod : estadoActual = new EnEjecucionState()\ntiempoInicio = now
+        Mod -> Home : onEventoModulo(INICIADO, "En ejecucion")
+        activate Home
+        Home --> Mod
+        deactivate Home
+    end
+
+    Mod --> Home
+    deactivate Mod
+
+    Home -> Mod : dibujar(app)
+    activate Mod
+    Mod -> Mod : dibujarSplash(app)
+    Mod --> Home
+    deactivate Mod
+end
+
+note over Home, Enem : A partir de aca estadoActual es EnEjecucionState:\ncada frame Home llama actualizar()/dibujar() y el\nmodulo delega en game.actualizar()/game.dibujar().
+
+@enduml

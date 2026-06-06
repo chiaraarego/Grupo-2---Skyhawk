@@ -110,6 +110,7 @@ classDiagram
         -PImage sprite
         Skyhawk(int xPos, int yPos)
         actualizar() void
+        disparar() ProyectilSkyhawk
         mover(Direccion direccion) void
         dibujar() void
     }
@@ -120,6 +121,7 @@ classDiagram
         Enemigo(int xPos, int yPos)
         actualizar() void
         intentaDisparar() boolean
+        disparar() ProyectilEnemigo
         reaparecer() void
         dibujar() void
     }
@@ -172,5 +174,7 @@ classDiagram
     GameController "1" *-- "*" ProyectilEnemigo : balasEnemigo
 
     Skyhawk ..> Direccion : usa en mover()
+    Skyhawk ..> ProyectilSkyhawk : crea en disparar()
+    Enemigo ..> ProyectilEnemigo : crea en disparar()
     GameController ..> Direccion : usa en leerTeclado()
 ```

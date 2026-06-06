@@ -48,6 +48,7 @@ classDiagram
         -PImage sprite
         Skyhawk(int xPos, int yPos)
         actualizar() void
+        disparar() ProyectilSkyhawk
         mover(Direccion direccion) void
         dibujar() void
     }
@@ -58,6 +59,7 @@ classDiagram
         Enemigo(int xPos, int yPos)
         actualizar() void
         intentaDisparar() boolean
+        disparar() ProyectilEnemigo
         reaparecer() void
         dibujar() void
     }
@@ -192,6 +194,8 @@ classDiagram
 
     %% ---- Dependencias internas ----
     Skyhawk ..> Direccion : usa
+    Skyhawk ..> ProyectilSkyhawk : crea
+    Enemigo ..> ProyectilEnemigo : crea
     GameController ..> Direccion : usa
 
     %% ---- Integración con el lobby ----

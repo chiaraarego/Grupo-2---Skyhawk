@@ -168,7 +168,7 @@ class AvionSkyhawk implements ModuloJuego {
     // pushStyle/popStyle aisla nuestros modos y estilos del resto del lobby:
     // al volver al menu, sus pantallas recuperan su rectMode/imageMode/fill.
     app.pushStyle();
-    app.background(0);
+    app.background(0,100,280);
     app.imageMode(PApplet.CENTER);    // el setup del lobby no setea estos modos,
     app.rectMode(PApplet.CENTER);     // y nuestras clases dibujan centrado en (x, y)
     app.ellipseMode(PApplet.CENTER);
