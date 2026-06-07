@@ -9,33 +9,28 @@ sequenceDiagram
 
     participant AvionSkyhawk
     participant GameController
-    participant Jugador_Avion
+    participant Skyhawk
     participant Enemigo
 
-    Jugador ->> +AvionSkyhawk : iniciar juego
-
-    %% AvionSkyhawk se auto-llama para inicializar
-    AvionSkyhawk ->> +AvionSkyhawk : iniciar()
+    Jugador ->> +AvionSkyhawk : iniciar()
 
     %% Crea el controlador del juego
     AvionSkyhawk ->> +GameController : GameController()
 
     %% El controlador crea al avión del jugador
-    GameController ->> +Jugador_Avion : Jugador_Avion(xPos, yPos)
-    Jugador_Avion -->> -GameController : devuelve xpos, ypos
+    GameController ->> +Skyhawk : Skyhawk(xPos, yPos)
+    Skyhawk -->> -GameController : avion creado
 
     %% El controlador se auto-llama para crear la horda de enemigos
     GameController ->> +GameController : crearEnemigos()
 
     loop por cada enemigo inicial
         GameController ->> +Enemigo : Enemigo(xPos, yPos)
-        Enemigo -->> -GameController : devuelve xpos, ypos
+        Enemigo -->> -GameController : Enemigo creado
     end
 
     %% Van cerrándose ordenadamente las ejecuciones abiertas de atrás hacia adelante
-    GameController -->> -GameController : enemigos creados
     GameController -->> -AvionSkyhawk : controlador listo
-    AvionSkyhawk -->> -AvionSkyhawk : inicialización completa
     
     %% RESPUESTA FINAL AL JUGADOR:
     AvionSkyhawk -->> -Jugador : muestra pantalla de juego (render)
@@ -48,34 +43,32 @@ sequenceDiagram
     actor Jugador
     participant AvionSkyhawk
     participant GameController
-    participant Jugador_Avion
+    participant Skyhawk
 
-    Jugador ->> +AvionSkyhawk : presiona tecla de movimiento
+    Jugador ->> +AvionSkyhawk : actualizar()
 
-    AvionSkyhawk ->> +GameController : actualizar()
+    AvionSkyhawk ->> +GameController : actualizarMovimiento()
 
     %% Abre la activación interna para leer el teclado
     GameController ->> +GameController : leerTeclado()
 
     alt tecla ARRIBA
-        GameController ->> +Jugador_Avion : mover(Direccion.ARRIBA)
-        Jugador_Avion -->> -GameController : 
+        GameController ->> +Skyhawk : mover(Direccion.ARRIBA)
+        Skyhawk -->> -GameController : this.y = this.y - this.velocidad
     else tecla ABAJO
-        GameController ->> +Jugador_Avion : mover(Direccion.ABAJO)
-        Jugador_Avion -->> -GameController : 
+        GameController ->> +Skyhawk : mover(Direccion.ABAJO)
+        Skyhawk -->> -GameController : this.y = this.y + this.velocidad
     else tecla IZQUIERDA
-        GameController ->> +Jugador_Avion : mover(Direccion.IZQUIERDA)
-        Jugador_Avion -->> -GameController : 
+        GameController ->> +Skyhawk : mover(Direccion.IZQUIERDA)
+        Skyhawk -->> -GameController : this.x = this.x - this.velocidad
     else tecla DERECHA
-        GameController ->> +Jugador_Avion : mover(Direccion.DERECHA)
-        Jugador_Avion -->> -GameController : 
+        GameController ->> +Skyhawk : mover(Direccion.DERECHA)
+        Skyhawk -->> -GameController : this.x = this.x + this.velocidad
     end
 
-    %% Cierra la lectura del teclado primero
-    GameController -->> -GameController : teclado procesado
     
     %% Retorna el flujo al objeto principal de la app
-    GameController -->> -AvionSkyhawk : estado actualizado
+    GameController -->> -AvionSkyhawk : Movimiento actualizado
 
     %% RESPUESTA FINAL AL JUGADOR:
     AvionSkyhawk -->> -Jugador : actualiza posición del avión en pantalla
@@ -88,26 +81,26 @@ sequenceDiagram
 
     participant AvionSkyhawk
     participant GameController
-    participant Jugador_Avion
+    participant Skyhawk
     participant ProyectilSkyhawk
     participant Enemigo
 
-    Jugador ->> +AvionSkyhawk : activa disparo
+    Jugador ->> +AvionSkyhawk : actualizar()
 
     AvionSkyhawk ->> +GameController : dispararSkyhawk()
 
-    GameController ->> +Jugador_Avion : disparar()
-    Jugador_Avion -->> -GameController : instancia de ProyectilSkyhawk
+    GameController ->> +Skyhawk : disparar()
+    Skyhawk -->> -GameController : Crea instancia de ProyectilSkyhawk y agrega a lista balasJugador
 
     GameController -->> -AvionSkyhawk : proyectil registrado en el juego
 
     AvionSkyhawk -->> -Jugador : dibuja disparo en pantalla
 
     loop hasta que el proyectil impacta o sale de pantalla
-        AvionSkyhawk ->> +GameController : actualizar()
+        AvionSkyhawk ->> +GameController : actualizarMovimiento()
 
-        GameController ->> +ProyectilSkyhawk : actualizar()
-        ProyectilSkyhawk -->> -GameController : posición avanzada
+        GameController ->> +ProyectilSkyhawk : actualizarProyectil()
+        ProyectilSkyhawk -->> -GameController : this.y = this.y - this.velocidad
 
         GameController ->> +GameController : detectarColisiones()
 
@@ -117,12 +110,12 @@ sequenceDiagram
         GameController ->> +ProyectilSkyhawk : getY()
         ProyectilSkyhawk -->> -GameController : y
 
+        alt proyectil impacta al enemigo
         GameController ->> +Enemigo : colisionaCon(x, y)
         Enemigo -->> -GameController : true
 
-        alt proyectil impacta al enemigo
             GameController ->> +Enemigo : recibirDanio(1)
-            Enemigo -->> -GameController : daño aplicado
+            Enemigo -->> -GameController : this.vida = this.vida - 1
             
             GameController ->> +Enemigo : estaViva()
             Enemigo -->> -GameController : false
@@ -130,48 +123,47 @@ sequenceDiagram
 
         GameController -->> -GameController : colisión procesada
 
-        GameController -->> -AvionSkyhawk : lógica de juego actualizada
+        GameController -->> -AvionSkyhawk : juego actualizado
         
         %% Respuesta visual en cada vuelta del loop para avisar al jugador
-        alt Si el enemigo murió
-            AvionSkyhawk -->> Jugador : muestra explosión y suma puntos
-        else El proyectil sigue viajando
-            AvionSkyhawk -->> Jugador : redibuja proyectil en movimiento
-        end
+            AvionSkyhawk -->> Jugador : Muere enemigo
     end
 ```
 
-## 4. Morir (por colisión / choque de proyectil)
+## 4. Morir por colisión 
 ```mermaid
 sequenceDiagram
     participant AvionSkyhawk
     participant GameController
-    participant ProyectilEnemigo
-    participant Jugador_Avion
+    participant Enemigo
+    participant Skyhawk
 
-    loop hasta que el proyectil enemigo impacta o sale de pantalla
-        AvionSkyhawk ->> +GameController : actualizar()
+    loop actualización del juego
+        AvionSkyhawk ->> +GameController : actualizarMovimiento()
 
-        GameController ->> +ProyectilEnemigo : actualizar()
-        ProyectilEnemigo -->> -GameController : 
+        GameController ->> +Enemigo : actualizar()
+        Enemigo -->> -GameController : 
 
         GameController ->> +GameController : detectarColisiones()
 
-        GameController ->> +ProyectilEnemigo : getX()
-        ProyectilEnemigo -->> -GameController : x
+        GameController ->> +Enemigo : getX()
+        Enemigo -->> -GameController : x
 
-        GameController ->> +ProyectilEnemigo : getY()
-        ProyectilEnemigo -->> -GameController : y
+        GameController ->> +Enemigo : getY()
+        Enemigo -->> -GameController : y
 
-        GameController ->> +Jugador_Avion : colisionaCon(x, y)
-        Jugador_Avion -->> -GameController : true
+        alt enemigo choca con Skyhawk
+        GameController ->> +Skyhawk : colisionaCon(x, y)
+        Skyhawk -->> -GameController : true
 
-        alt proyectil impacta al avión
-            GameController ->> +Jugador_Avion : recibirDanio(1)
-            Jugador_Avion -->> -GameController : 
+            GameController ->> +Skyhawk : recibirDanio(1)
+            Skyhawk -->> -GameController : 
 
-            GameController ->> +Jugador_Avion : estaViva()
-            Jugador_Avion -->> -GameController : false
+            GameController ->> +Skyhawk : estaVivo()
+            Skyhawk -->> -GameController : false
+
+            GameController ->> +Enemigo : desaparecer()
+            Enemigo -->> -GameController : 
         end
 
         GameController -->> -GameController : 
@@ -181,5 +173,89 @@ sequenceDiagram
     AvionSkyhawk ->> +GameController : jugadorVivo()
     GameController -->> -AvionSkyhawk : false
 
+    alt Skyhawk muerto
+        AvionSkyhawk ->> +AvionSkyhawk : finalizar()
+        AvionSkyhawk -->> -AvionSkyhawk : 
+    end
+```
+## 5 Pausar/Reanudar
+```mermaid
+sequenceDiagram
+    actor Jugador
+
+    participant AvionSkyhawk
+    participant GameController
+
+    Jugador ->> +AvionSkyhawk : pausar()
+
+
+    Note over AvionSkyhawk: estadoActual = PAUSADO
+
+    loop mientras está pausado
+        AvionSkyhawk ->> +AvionSkyhawk : actualizar(PApplet app)
+        AvionSkyhawk -->> -AvionSkyhawk : no actualiza GameController
+
+        AvionSkyhawk ->> +AvionSkyhawk : dibujar(PApplet app)
+        AvionSkyhawk -->> -AvionSkyhawk : muestra pantalla pausada
+    end
+
+    Jugador ->> +AvionSkyhawk : solicita reanudar
+
+    AvionSkyhawk ->> +AvionSkyhawk : reanudar()
+    AvionSkyhawk -->> -AvionSkyhawk : 
+
+    Note over AvionSkyhawk: estadoActual = EN_EJECUCION
+
+    loop juego reanudado
+        AvionSkyhawk ->> +GameController : actualizarMovimiento()
+        GameController -->> -AvionSkyhawk : 
+
+        AvionSkyhawk ->> +GameController : dibujar()
+        GameController -->> -AvionSkyhawk : 
+    end
+```
+
+
+
+
+
+
+
+
+## 6 Estadisticas
+```mermaid
+sequenceDiagram
+    participant AvionSkyhawk
+    participant GameController
+    participant Registro_Estadistica_Sky
+    participant EstadisticasGenerales
+
     AvionSkyhawk ->> +AvionSkyhawk : finalizar()
+
+    AvionSkyhawk ->> +GameController : getRegistroEstadistica()
+
+    GameController ->> +Registro_Estadistica_Sky : getPuntaje()
+    Registro_Estadistica_Sky -->> -GameController : puntaje
+
+    GameController ->> +Registro_Estadistica_Sky : getEnemigosEliminados()
+    Registro_Estadistica_Sky -->> -GameController : enemigosEliminados
+
+    GameController ->> +Registro_Estadistica_Sky : getPartidasJugadas()
+    Registro_Estadistica_Sky -->> -GameController : partidasJugadas
+
+    GameController ->> +Registro_Estadistica_Sky : getTiempoJugado()
+    Registro_Estadistica_Sky -->> -GameController : tiempoJugado
+
+    GameController ->> +Registro_Estadistica_Sky : getSituacionPartida()
+    Registro_Estadistica_Sky -->> -GameController : situacionPartida
+
+
+    GameController ->> +EstadisticasGenerales : crear EstadisticasGenerales
+    EstadisticasGenerales -->> -GameController : estadisticasGenerales
+
+    EstadisticasGenerales -->> GameController : registroEstadistica
+    GameController -->> AvionSkyhawk : registroEstadistica
+
+    AvionSkyhawk -->> -AvionSkyhawk :
+
 ```
