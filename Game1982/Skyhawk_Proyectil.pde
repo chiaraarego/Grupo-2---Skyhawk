@@ -15,7 +15,7 @@ class Proyectil
   }
 
   // Las subclases sobrescriben estos metodos.
-  void actualizar()
+  void actualizarProyectil()
   {
   }
 

@@ -6,7 +6,7 @@ class ProyectilSkyhawk extends Proyectil
     super(xPos, yPos);
   }
 
-  void actualizar()
+  void actualizarProyectil()
   {
     this.y = this.y - this.velocidad;   // sube
   }

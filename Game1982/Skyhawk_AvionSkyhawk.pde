@@ -144,9 +144,9 @@ class AvionSkyhawk implements ModuloJuego {
         }
         espacioAntes = espacioAhora;
 
-        // El movimiento (WASD / flechas) lo lee game.actualizar() directamente
-        // desde las variables globales del sketch (keyPressed, key, keyCode).
-        game.actualizar();
+        // El movimiento (WASD / flechas) lo lee game.actualizarMovimiento()
+        // directamente desde las variables globales del sketch (keyPressed, key, keyCode).
+        game.actualizarMovimiento();
       } else {
         // Game over: congelamos la escena y, tras unos segundos, finalizamos
         // para que el Home guarde las estadisticas y vuelva al menu.

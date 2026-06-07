@@ -1,9 +1,9 @@
 {
   "nombreModulo": "Skyhawk 1942",
-  "puntajeTotal": 420,
-  "partidasJugadas": 9,
+  "puntajeTotal": 430,
+  "partidasJugadas": 11,
   "partidasGanadas": 0,
-  "partidasPerdidas": 9,
-  "enemigosDestruidos": 42,
-  "tiempoJugadoSegundos": 91
+  "partidasPerdidas": 11,
+  "enemigosDestruidos": 43,
+  "tiempoJugadoSegundos": 104
 }

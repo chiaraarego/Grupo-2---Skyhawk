@@ -44,7 +44,7 @@ class GameController
     return skyhawk.estaViva();
   }
 
-  void actualizar()
+  void actualizarMovimiento()
   {
     leerTeclado();        // mover el avion segun las teclas apretadas
     skyhawk.actualizar();
@@ -63,13 +63,13 @@ class GameController
     // Mover las balas del jugador
     for (ProyectilSkyhawk bala : balasJugador)
     {
-      bala.actualizar();
+      bala.actualizarProyectil();
     }
 
     // Mover las balas de los enemigos
     for (ProyectilEnemigo bala : balasEnemigo)
     {
-      bala.actualizar();
+      bala.actualizarProyectil();
     }
 
     detectarColisiones();

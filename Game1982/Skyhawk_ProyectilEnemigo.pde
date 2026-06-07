@@ -7,7 +7,7 @@ class ProyectilEnemigo extends Proyectil
     super(xPos, yPos);
   }
 
-  void actualizar()
+  void actualizarProyectil()
   {
     this.y = this.y + this.velocidad;   // baja
   }
