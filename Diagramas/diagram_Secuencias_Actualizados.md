@@ -266,72 +266,72 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant HomeJuego
-    participant AvionSkyhawk as ModuloSkyhawk
-    participant GameController
+    participant ModuloSkyhawk
+    participant SkyhawkGameController
     participant Registro as SkyhawkRegistroEstadistica
     participant Stats as EstadisticasGenerales
     participant Gestor as GestorEstadisticas
 
-    HomeJuego ->> AvionSkyhawk: actualizar(app)
-    activate AvionSkyhawk
+    HomeJuego ->> ModuloSkyhawk: actualizar(app)
+    activate ModuloSkyhawk
 
-    AvionSkyhawk ->> GameController: jugadorVivo()
-    activate GameController
-    GameController -->> AvionSkyhawk: false
-    deactivate GameController
+    ModuloSkyhawk ->> SkyhawkGameController: jugadorVivo()
+    activate SkyhawkGameController
+    SkyhawkGameController -->> ModuloSkyhawk: false
+    deactivate SkyhawkGameController
 
-    Note over AvionSkyhawk: Muestra GAME OVER durante 2500 ms
+    Note over ModuloSkyhawk: Muestra GAME OVER durante 2500 ms
 
-    AvionSkyhawk ->> AvionSkyhawk: finalizar()
-    AvionSkyhawk -->> HomeJuego: evento FINALIZADO
-    deactivate AvionSkyhawk
+    ModuloSkyhawk ->> ModuloSkyhawk: finalizar()
+    ModuloSkyhawk -->> HomeJuego: evento FINALIZADO
+    deactivate ModuloSkyhawk
 
     HomeJuego ->> HomeJuego: finalizarModuloActual()
 
-    HomeJuego ->> AvionSkyhawk: getEstadisticasGenerales()
-    activate AvionSkyhawk
+    HomeJuego ->> ModuloSkyhawk: getEstadisticasGenerales()
+    activate ModuloSkyhawk
 
-    AvionSkyhawk ->> GameController: getRegistroEstadistica()
-    activate GameController
-    GameController -->> AvionSkyhawk: registro
-    deactivate GameController
+    ModuloSkyhawk ->> SkyhawkGameController: getRegistroEstadistica()
+    activate SkyhawkGameController
+    SkyhawkGameController -->> ModuloSkyhawk: registro
+    deactivate SkyhawkGameController
 
-    AvionSkyhawk -) Registro: registrarTiempo(tiempoSeg)
+    ModuloSkyhawk -) Registro: registrarTiempo(tiempoSeg)
     activate Registro
     deactivate Registro
 
-    AvionSkyhawk ->> Registro: getSituacionPartida()
+    ModuloSkyhawk ->> Registro: getSituacionPartida()
     activate Registro
-    Registro -->> AvionSkyhawk: "DERROTA"
+    Registro -->> ModuloSkyhawk: "DERROTA"
     deactivate Registro
 
-    AvionSkyhawk ->> Registro: getPuntaje()
+    ModuloSkyhawk ->> Registro: getPuntaje()
     activate Registro
-    Registro -->> AvionSkyhawk: Puntaje
+    Registro -->> ModuloSkyhawk: Puntaje
     deactivate Registro
 
-    AvionSkyhawk ->> Registro: getPartidasJugadas()
+    ModuloSkyhawk ->> Registro: getPartidasJugadas()
     activate Registro
-    Registro -->> AvionSkyhawk: PartidasJugadas
+    Registro -->> ModuloSkyhawk: PartidasJugadas
     deactivate Registro
 
-    AvionSkyhawk ->> Registro: getEnemigosEliminados()
+    ModuloSkyhawk ->> Registro: getEnemigosEliminados()
     activate Registro
-    Registro -->> AvionSkyhawk: EnemigosEliminados
+    Registro -->> ModuloSkyhawk: EnemigosEliminados
     deactivate Registro
 
-    AvionSkyhawk ->> Registro: getTiempoJugado()
+    ModuloSkyhawk ->> Registro: getTiempoJugado()
     activate Registro
-    Registro -->> AvionSkyhawk: TiempoJugado
+    Registro -->> ModuloSkyhawk: TiempoJugado
     deactivate Registro
 
-    AvionSkyhawk ->> Stats: new EstadisticasGenerales(...)
+    ModuloSkyhawk ->> Stats: new EstadisticasGenerales(...)
     activate Stats
-    Stats -->> AvionSkyhawk: stats
+    Stats -->> ModuloSkyhawk: stats
     deactivate Stats
 
-    AvionSkyhawk -->> HomeJuego: stats
-    deactivate AvionSkyhawk
+    ModuloSkyhawk -->> HomeJuego: stats
+    deactivate ModuloSkyhawk
 
     HomeJuego ->> Gestor: guardarEstadisticas(stats)
     activate Gestor
