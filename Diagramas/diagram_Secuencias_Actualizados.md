@@ -138,37 +138,37 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant AvionSkyhawk
-    participant GameController
-    participant Enemigo
-    participant Skyhawk
+    participant SkyhawkGameController
+    participant SkyhawkEnemigo
+    participant SkyhawkJugador
 
     loop actualización del juego
-        AvionSkyhawk ->> +GameController : detectarColisiones()
+        AvionSkyhawk ->> +SkyhawkGameController : detectarColisiones()
 
 
 
-        GameController ->> +Enemigo : getX()
-        Enemigo -->> -GameController : x
+        SkyhawkGameController ->> +SkyhawkEnemigo : getX()
+        SkyhawkEnemigo -->> -SkyhawkGameController : x
 
-        GameController ->> +Enemigo : getY()
-        Enemigo -->> -GameController : y
+        SkyhawkGameController ->> +SkyhawkEnemigo : getY()
+        SkyhawkEnemigo -->> -SkyhawkGameController : y
 
         opt enemigo choca con Skyhawk
-        GameController ->> +Skyhawk : colisionaCon(x, y)
-        Skyhawk -->> -GameController : true
+        SkyhawkGameController ->> +SkyhawkJugador : colisionaCon(x, y)
+        SkyhawkJugador -->> -SkyhawkGameController : true
 
-            GameController -) +Skyhawk : recibirDanio(1)
+            SkyhawkGameController -) +SkyhawkJugador : recibirDanio(1)
 
 
-            GameController ->> +Enemigo : reaparecer()
-            Enemigo -->> -GameController : Enemigo reaparece
+            SkyhawkGameController ->> +SkyhawkEnemigo : reaparecer()
+            SkyhawkEnemigo -->> -SkyhawkGameController : Enemigo reaparece
         end
 
-        GameController -->> -AvionSkyhawk : 
-    AvionSkyhawk ->> +GameController : jugadorVivo()
-    GameController ->> +Skyhawk : estaVivo()
-    Skyhawk -->> -GameController : false
-    GameController -->> -AvionSkyhawk : false
+        SkyhawkGameController -->> -AvionSkyhawk : 
+    AvionSkyhawk ->> +SkyhawkGameController : jugadorVivo()
+    SkyhawkGameController ->> +SkyhawkJugador : estaVivo()
+    SkyhawkJugador -->> -SkyhawkGameController : false
+    SkyhawkGameController -->> -AvionSkyhawk : false
 end
         AvionSkyhawk ->> AvionSkyhawk : finalizar()
     
