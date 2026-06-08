@@ -7,15 +7,15 @@ Basado en el diagrama de clases
 sequenceDiagram
     actor Jugador
 
-    participant AvionSkyhawk
+    participant ModuloSkyhawk
     participant SkyhawkGameController
     participant SkyhawkJugador
     participant SkyhawkEnemigo
 
-    Jugador ->> +AvionSkyhawk : iniciar()
+    Jugador ->> +ModuloSkyhawk : iniciar()
 
     %% Crea el controlador del juego
-    AvionSkyhawk ->> +SkyhawkGameController : SkyhawkGameController()
+    ModuloSkyhawk ->> +SkyhawkGameController : SkyhawkGameController()
 
     %% El controlador crea al avión del jugador
     SkyhawkGameController ->> +SkyhawkJugador : SkyhawkJugador(xPos, yPos)
@@ -30,10 +30,10 @@ sequenceDiagram
     end
 
     %% Van cerrándose ordenadamente las ejecuciones abiertas de atrás hacia adelante
-    SkyhawkGameController -->> -AvionSkyhawk : controlador listo
+    SkyhawkGameController -->> -ModuloSkyhawk : controlador listo
     
     %% RESPUESTA FINAL AL JUGADOR:
-    AvionSkyhawk -->> -Jugador : muestra pantalla de juego (render)
+    ModuloSkyhawk -->> -Jugador : muestra pantalla de juego (render)
 ```
 
 ## 2. Mover el avión (arriba, abajo, izquierda, derecha)
@@ -41,13 +41,13 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     actor Jugador
-    participant AvionSkyhawk
+    participant ModuloSkyhawk
     participant SkyhawkGameController
     participant SkyhawkJugador
 
-    Jugador ->> +AvionSkyhawk : actualizar()
+    Jugador ->> +ModuloSkyhawk : actualizar()
 
-    AvionSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
+    ModuloSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
 
     %% Abre la activación interna para leer el teclado
     SkyhawkGameController ->> +SkyhawkGameController : leerTeclado()
@@ -68,10 +68,10 @@ sequenceDiagram
 
     
     %% Retorna el flujo al objeto principal de la app
-    SkyhawkGameController -->> -AvionSkyhawk : Movimiento actualizado
+    SkyhawkGameController -->> -ModuloSkyhawk : Movimiento actualizado
 
     %% RESPUESTA FINAL AL JUGADOR:
-    AvionSkyhawk -->> -Jugador : actualiza posición del avión en pantalla
+    ModuloSkyhawk -->> -Jugador : actualiza posición del avión en pantalla
 ```
 
 ## 3. Disparar y matar un enemigo
@@ -79,26 +79,26 @@ sequenceDiagram
 sequenceDiagram
     actor Jugador
 
-    participant AvionSkyhawk
+    participant ModuloSkyhawk
     participant SkyhawkGameController
     participant SkyhawkJugador
     participant SkyhawkProyectilJugador
     participant SkyhawkEnemigo
     participant SkyhawkRegistroEstadistica
 
-    Jugador ->> +AvionSkyhawk : actualizar()
+    Jugador ->> +ModuloSkyhawk : actualizar()
 
-    AvionSkyhawk ->> +SkyhawkGameController : dispararSkyhawk()
+    ModuloSkyhawk ->> +SkyhawkGameController : dispararSkyhawk()
 
     SkyhawkGameController ->> +SkyhawkJugador : disparar()
     SkyhawkJugador -->> -SkyhawkGameController : Crea instancia de SkyhawkProyectilJugador y agrega a lista balasJugador
 
-    SkyhawkGameController -->> -AvionSkyhawk : proyectil registrado en el juego
+    SkyhawkGameController -->> -ModuloSkyhawk : proyectil registrado en el juego
 
-    AvionSkyhawk -->> -Jugador : dibuja disparo en pantalla
+    ModuloSkyhawk -->> -Jugador : dibuja disparo en pantalla
 
     loop hasta que el proyectil impacta o sale de pantalla
-        AvionSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
+        ModuloSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
 
         SkyhawkGameController ->> +SkyhawkProyectilJugador : actualizarProyectil()
         SkyhawkProyectilJugador -->> -SkyhawkGameController : Posicion actualizada
@@ -127,10 +127,10 @@ sequenceDiagram
         end
 
 
-        SkyhawkGameController -->> -AvionSkyhawk : juego actualizado
+        SkyhawkGameController -->> -ModuloSkyhawk : juego actualizado
         
         %% Respuesta visual en cada vuelta del loop para avisar al jugador
-            AvionSkyhawk -->> Jugador : Muere enemigo y reaparece (+10 pts)
+            ModuloSkyhawk -->> Jugador : Muere enemigo y reaparece (+10 pts)
     end
 ```
 
