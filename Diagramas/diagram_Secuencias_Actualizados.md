@@ -296,7 +296,7 @@ sequenceDiagram
     GameController -->> AvionSkyhawk: registro
     deactivate GameController
 
-    AvionSkyhawk ->> Registro: registrarTiempo(tiempoSeg)
+    AvionSkyhawk -) Registro: registrarTiempo(tiempoSeg)
     activate Registro
     deactivate Registro
 
@@ -306,18 +306,22 @@ sequenceDiagram
     deactivate Registro
 
     AvionSkyhawk ->> Registro: getPuntaje()
+    Registro -->> AvionSkyhawk: Puntaje
     activate Registro
     deactivate Registro
 
     AvionSkyhawk ->> Registro: getPartidasJugadas()
+    Registro -->> AvionSkyhawk: PartidasJugadas
     activate Registro
     deactivate Registro
 
     AvionSkyhawk ->> Registro: getEnemigosEliminados()
+    Registro -->> AvionSkyhawk: EnemigosEliminados
     activate Registro
     deactivate Registro
 
     AvionSkyhawk ->> Registro: getTiempoJugado()
+    Registro -->> AvionSkyhawk: TiempoJugado
     activate Registro
     deactivate Registro
 
