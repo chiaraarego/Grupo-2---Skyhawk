@@ -80,54 +80,54 @@ sequenceDiagram
     actor Jugador
 
     participant AvionSkyhawk
-    participant GameController
-    participant Skyhawk
-    participant ProyectilSkyhawk
-    participant Enemigo
-    participant Registro_Estadistica_Sky
+    participant SkyhawkGameController
+    participant SkyhawkJugador
+    participant SkyhawkProyectilJugador
+    participant SkyhawkEnemigo
+    participant SkyhawkRegistroEstadistica
 
     Jugador ->> +AvionSkyhawk : actualizar()
 
-    AvionSkyhawk ->> +GameController : dispararSkyhawk()
+    AvionSkyhawk ->> +SkyhawkGameController : dispararSkyhawk()
 
-    GameController ->> +Skyhawk : disparar()
-    Skyhawk -->> -GameController : Crea instancia de ProyectilSkyhawk y agrega a lista balasJugador
+    SkyhawkGameController ->> +SkyhawkJugador : disparar()
+    SkyhawkJugador -->> -SkyhawkGameController : Crea instancia de SkyhawkProyectilJugador y agrega a lista balasJugador
 
-    GameController -->> -AvionSkyhawk : proyectil registrado en el juego
+    SkyhawkGameController -->> -AvionSkyhawk : proyectil registrado en el juego
 
     AvionSkyhawk -->> -Jugador : dibuja disparo en pantalla
 
     loop hasta que el proyectil impacta o sale de pantalla
-        AvionSkyhawk ->> +GameController : actualizarMovimiento()
+        AvionSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
 
-        GameController ->> +ProyectilSkyhawk : actualizarProyectil()
-        ProyectilSkyhawk -->> -GameController : Posicion actualizada
+        SkyhawkGameController ->> +SkyhawkProyectilJugador : actualizarProyectil()
+        SkyhawkProyectilJugador -->> -SkyhawkGameController : Posicion actualizada
 
-        GameController ->> +GameController : detectarColisiones()
+        SkyhawkGameController ->> +SkyhawkGameController : detectarColisiones()
 
-        GameController ->> +ProyectilSkyhawk : getX()
-        ProyectilSkyhawk -->> -GameController : x
+        SkyhawkGameController ->> +SkyhawkProyectilJugador : getX()
+        SkyhawkProyectilJugador -->> -SkyhawkGameController : x
 
-        GameController ->> +ProyectilSkyhawk : getY()
-        ProyectilSkyhawk -->> -GameController : y
+        SkyhawkGameController ->> +SkyhawkProyectilJugador : getY()
+        SkyhawkProyectilJugador -->> -SkyhawkGameController : y
 
-        GameController ->> +Enemigo : colisionaCon(x, y)
-        Enemigo -->> -GameController : true
+        SkyhawkGameController ->> +SkyhawkEnemigo : colisionaCon(x, y)
+        SkyhawkEnemigo -->> -SkyhawkGameController : true
 
         opt proyectil impacta al enemigo
-            GameController -) +Enemigo : recibirDanio(1)
+            SkyhawkGameController -) +SkyhawkEnemigo : recibirDanio(1)
             
-            GameController ->> +Enemigo : estaViva()
-            Enemigo -->> -GameController : false
+            SkyhawkGameController ->> +SkyhawkEnemigo : estaViva()
+            SkyhawkEnemigo -->> -SkyhawkGameController : false
 
-            GameController -) +Registro_Estadistica_Sky : registrarEnemigoEliminado()
-            GameController ->> +Enemigo : reaparecer()
-            Enemigo -->> -GameController : Enemigo reaparece
+            SkyhawkGameController -) +SkyhawkRegistroEstadistica : registrarEnemigoEliminado()
+            SkyhawkGameController ->> +SkyhawkEnemigo : reaparecer()
+            SkyhawkEnemigo -->> -SkyhawkGameController : Enemigo reaparece
             
         end
 
 
-        GameController -->> -AvionSkyhawk : juego actualizado
+        SkyhawkGameController -->> -AvionSkyhawk : juego actualizado
         
         %% Respuesta visual en cada vuelta del loop para avisar al jugador
             AvionSkyhawk -->> Jugador : Muere enemigo y reaparece (+10 pts)
