@@ -306,23 +306,23 @@ sequenceDiagram
     deactivate Registro
 
     AvionSkyhawk ->> Registro: getPuntaje()
-    Registro -->> AvionSkyhawk: Puntaje
     activate Registro
+    Registro -->> AvionSkyhawk: Puntaje
     deactivate Registro
 
     AvionSkyhawk ->> Registro: getPartidasJugadas()
-    Registro -->> AvionSkyhawk: PartidasJugadas
     activate Registro
+    Registro -->> AvionSkyhawk: PartidasJugadas
     deactivate Registro
 
     AvionSkyhawk ->> Registro: getEnemigosEliminados()
-    Registro -->> AvionSkyhawk: EnemigosEliminados
     activate Registro
+    Registro -->> AvionSkyhawk: EnemigosEliminados
     deactivate Registro
 
     AvionSkyhawk ->> Registro: getTiempoJugado()
-    Registro -->> AvionSkyhawk: TiempoJugado
     activate Registro
+    Registro -->> AvionSkyhawk: TiempoJugado
     deactivate Registro
 
     AvionSkyhawk ->> Stats: new EstadisticasGenerales(...)
