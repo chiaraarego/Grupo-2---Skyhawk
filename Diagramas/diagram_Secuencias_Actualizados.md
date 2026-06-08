@@ -260,3 +260,76 @@ sequenceDiagram
     ModuloSkyhawk -->> -ModuloSkyhawk :
 
 ```
+
+
+## 6. Estadisticas Nuevo
+```mermaid
+sequenceDiagram
+    participant HomeJuego
+    participant AvionSkyhawk as ModuloSkyhawk
+    participant GameController
+    participant Registro as SkyhawkRegistroEstadistica
+    participant Stats as EstadisticasGenerales
+    participant Gestor as GestorEstadisticas
+
+    HomeJuego ->> AvionSkyhawk: actualizar(app)
+    activate AvionSkyhawk
+
+    AvionSkyhawk ->> GameController: jugadorVivo()
+    activate GameController
+    GameController -->> AvionSkyhawk: false
+    deactivate GameController
+
+    Note over AvionSkyhawk: Muestra GAME OVER durante 2500 ms
+
+    AvionSkyhawk ->> AvionSkyhawk: finalizar()
+    AvionSkyhawk -->> HomeJuego: evento FINALIZADO
+    deactivate AvionSkyhawk
+
+    HomeJuego ->> HomeJuego: finalizarModuloActual()
+
+    HomeJuego ->> AvionSkyhawk: getEstadisticasGenerales()
+    activate AvionSkyhawk
+
+    AvionSkyhawk ->> GameController: getRegistroEstadistica()
+    activate GameController
+    GameController -->> AvionSkyhawk: registro
+    deactivate GameController
+
+    AvionSkyhawk ->> Registro: registrarTiempo(tiempoSeg)
+    activate Registro
+    deactivate Registro
+
+    AvionSkyhawk ->> Registro: getSituacionPartida()
+    activate Registro
+    Registro -->> AvionSkyhawk: "DERROTA"
+    deactivate Registro
+
+    AvionSkyhawk ->> Registro: getPuntaje()
+    activate Registro
+    deactivate Registro
+
+    AvionSkyhawk ->> Registro: getPartidasJugadas()
+    activate Registro
+    deactivate Registro
+
+    AvionSkyhawk ->> Registro: getEnemigosEliminados()
+    activate Registro
+    deactivate Registro
+
+    AvionSkyhawk ->> Registro: getTiempoJugado()
+    activate Registro
+    deactivate Registro
+
+    AvionSkyhawk ->> Stats: new EstadisticasGenerales(...)
+    activate Stats
+    Stats -->> AvionSkyhawk: stats
+    deactivate Stats
+
+    AvionSkyhawk -->> HomeJuego: stats
+    deactivate AvionSkyhawk
+
+    HomeJuego ->> Gestor: guardarEstadisticas(stats)
+    activate Gestor
+    deactivate Gestor
+```
