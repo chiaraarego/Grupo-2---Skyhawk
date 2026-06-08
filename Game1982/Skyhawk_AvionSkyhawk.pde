@@ -1,8 +1,8 @@
-// AvionSkyhawk.pde
-// Adaptador que conecta nuestro juego (GameController) con el lobby del grupo.
-// Implementa el contrato ModuloJuego delegando toda la logica en GameController.
+// ModuloSkyhawk.pde
+// Adaptador que conecta nuestro juego (SkyhawkGameController) con el lobby del grupo.
+// Implementa el contrato ModuloJuego delegando toda la logica en SkyhawkGameController.
 //
-// Es .pde a proposito: asi nuestras clases (Skyhawk, Enemigo, Proyectil, ...)
+// Es .pde a proposito: asi nuestras clases (SkyhawkJugador, SkyhawkEnemigo, SkyhawkProyectil, ...)
 // quedan como inner classes del sketch Game1982 y siguen usando las funciones
 // globales de Processing (image, rect, width, height, key, keyPressed, ...)
 // sin tener que prefijar nada con "app.".
@@ -11,13 +11,13 @@ import processing.core.PApplet;
 import java.util.ArrayList;
 import java.util.List;
 
-class AvionSkyhawk implements ModuloJuego {
+class ModuloSkyhawk implements ModuloJuego {
 
   private EstadoJuego estadoActual;
   private ContextoJuego contexto;
   private List<IModuloObserver> observers;
 
-  private GameController game;        // nuestra partida (la logica del juego)
+  private SkyhawkGameController game;        // nuestra partida (la logica del juego)
   private long tiempoInicio;          // marca para el tiempo jugado de las stats
   private long tiempoInicioCarga;     // marca para el splash de "cargando"
   private long tiempoMuerte;          // marca para mostrar GAME OVER un rato
@@ -27,7 +27,7 @@ class AvionSkyhawk implements ModuloJuego {
   private static final int TIEMPO_CARGA_MS = 600;
   private static final int GAME_OVER_MS = 2500;
 
-  AvionSkyhawk() {
+  ModuloSkyhawk() {
     estadoActual = new NoIniciadoState();
     observers = new ArrayList<IModuloObserver>();
   }
@@ -79,7 +79,7 @@ class AvionSkyhawk implements ModuloJuego {
 
     // El registro junto las stats durante la partida; aca solo cerramos el tiempo
     // y mapeamos su contenido al DTO que entiende el lobby.
-    Registro_Estadistica_Sky registro = game.getRegistroEstadistica();
+    SkyhawkRegistroEstadistica registro = game.getRegistroEstadistica();
     registro.registrarTiempo(tiempoSeg);
 
     // Es un survival: la situacion siempre es DERROTA (no hay victoria todavia),
@@ -123,7 +123,7 @@ class AvionSkyhawk implements ModuloJuego {
     if ("INICIANDO".equals(estado)) {
       // Splash breve y luego "cargamos" la partida (crea el avion y sus sprites).
       if (System.currentTimeMillis() - tiempoInicioCarga >= TIEMPO_CARGA_MS) {
-        game = new GameController();
+        game = new SkyhawkGameController();
         estadoActual = new EnEjecucionState();
         tiempoInicio = System.currentTimeMillis();
         muerto = false;

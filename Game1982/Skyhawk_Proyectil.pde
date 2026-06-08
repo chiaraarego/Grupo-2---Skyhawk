@@ -1,13 +1,13 @@
 // Clase base de las balas. Guarda la posicion y la velocidad.
-// Las subclases (ProyectilSkyhawk, ProyectilEnemigo) dicen para donde se mueve
+// Las subclases (SkyhawkProyectilJugador, SkyhawkProyectilEnemigo) dicen para donde se mueve
 // cada una y de que color se dibuja.
-class Proyectil
+class SkyhawkProyectil
 {
   protected int x;
   protected int y;
   protected int velocidad;
 
-  Proyectil(int xPos, int yPos)
+  SkyhawkProyectil(int xPos, int yPos)
   {
     this.x = xPos;
     this.y = yPos;

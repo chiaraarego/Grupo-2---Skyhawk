@@ -19,8 +19,8 @@ public class ModuloPrueba implements ModuloJuego {
   }
 
   public String getNombreModulo() { return "Prueba"; }
-  public String getDescripcion() { return "Módulo de prueba del sistema Home"; }
-  public String getNombreAvion() { return "AVION PRUEBA"; }
+  public String getDescripcion() { return "Modulo de prueba del sistema Home"; }
+  public String getNombreAvion() { return "A-4 SKYHAWK"; }
 
   public void inicializarContexto(ContextoJuego ctx) { this.contexto = ctx; }
 
@@ -105,12 +105,12 @@ public class ModuloPrueba implements ModuloJuego {
     app.background(0);
 
     app.fill(0, 255, 0);
-    app.textSize(14);
+    app.textSize(18);
     app.textAlign(PApplet.CENTER, PApplet.CENTER);
     app.text("A-4 SKYHAWK  -  MODULO DE PRUEBA", app.width / 2f, app.height * 0.15f);
 
     app.fill(0, 120, 0);
-    app.textSize(9);
+    app.textSize(12);
     app.text("ESTADO: " + estado, app.width / 2f, app.height * 0.26f);
 
     if ("INICIANDO".equals(estado)) {
@@ -118,7 +118,7 @@ public class ModuloPrueba implements ModuloJuego {
       float progreso = PApplet.constrain((float) elapsed / TIEMPO_CARGA_MS, 0, 1);
 
       app.fill(0, 120, 0);
-      app.textSize(9);
+      app.textSize(12);
       app.text("CARGANDO RECURSOS...", app.width / 2f, app.height * 0.45f);
 
       float bw = 400, bh = 20;
@@ -135,11 +135,11 @@ public class ModuloPrueba implements ModuloJuego {
       float progreso = PApplet.constrain((float) elapsed / DURACION_MS, 0, 1);
 
       app.fill(0, 200, 0);
-      app.textSize(11);
+      app.textSize(15);
       app.text("PUNTAJE: " + puntaje, app.width / 2f, app.height * 0.40f);
 
       app.fill(0, 120, 0);
-      app.textSize(8);
+      app.textSize(11);
       app.text("TIEMPO: " + (elapsed / 1000) + "s / " + (DURACION_MS / 1000) + "s", app.width / 2f, app.height * 0.50f);
 
       float bw = 400, bh = 16;
@@ -152,15 +152,15 @@ public class ModuloPrueba implements ModuloJuego {
       app.rect(bx, by, bw * progreso, bh);
 
       app.fill(0, 120, 0);
-      app.textSize(8);
+      app.textSize(11);
       app.text("ESC pausar  |  Q finalizar", app.width / 2f, app.height * 0.88f);
 
     } else if ("PAUSADO".equals(estado)) {
       app.fill(0, 255, 0);
-      app.textSize(16);
+      app.textSize(22);
       app.text("-- PAUSA --", app.width / 2f, app.height * 0.50f);
       app.fill(0, 120, 0);
-      app.textSize(8);
+      app.textSize(11);
       app.text("ESC para reanudar  |  Q para finalizar", app.width / 2f, app.height * 0.62f);
     }
   }

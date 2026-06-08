@@ -2,6 +2,7 @@ import processing.core.*;
 import java.util.*;
 
 public class PantallaSeleccion {
+  private PImage fondoSeleccion;
   private List<Boton> botonesModulos;
   private List<String> nombresModulos;
   private Boton botonEstadisticas;
@@ -10,7 +11,9 @@ public class PantallaSeleccion {
   private int indiceSeleccion;
   private String mensajeError;
 
-  public PantallaSeleccion(int anchoVentana, int altoVentana) {
+  public PantallaSeleccion(PApplet app, int anchoVentana, int altoVentana) {
+    fondoSeleccion = app.loadImage("assets/background/fondo_seleccion.png");
+
     botonesModulos = new ArrayList<>();
     nombresModulos = new ArrayList<>();
     todosBotones = new ArrayList<>();
@@ -33,12 +36,14 @@ public class PantallaSeleccion {
     float bAlto = 44;
     float gap = 12;
     float totalH = modulos.size() * (bAlto + gap) - gap;
-    float inicioY = altoVentana * 0.35f - totalH / 2f;
+    float limiteInferiorInstrucciones = altoVentana * 0.28f; // margen bajo el texto de instrucciones
+    float centroIdeal = altoVentana * 0.35f - totalH / 2f;  // posicion centrada original
+    float inicioY = Math.max(centroIdeal, limiteInferiorInstrucciones);
 
     for (int i = 0; i < modulos.size(); i++) {
       ModuloJuego m = modulos.get(i);
       Boton b = new Boton(anchoVentana / 2f - bAncho / 2f, inicioY + i * (bAlto + gap), bAncho, bAlto,
-          m.getNombreAvion() + "  [" + m.getNombreModulo() + "]");
+          m.getNombreAvion() );
       botonesModulos.add(b);
       nombresModulos.add(m.getNombreModulo());
     }
@@ -84,19 +89,25 @@ public class PantallaSeleccion {
   public void setMensajeError(String msg) { this.mensajeError = msg; }
 
   public void dibujar(PApplet app) {
-    app.background(0);
+    if (fondoSeleccion != null) {
+      app.image(fondoSeleccion, 0, 0, app.width, app.height);
+    } else {
+      app.background(0);
+    }
 
+    app.textSize(22);
     app.fill(255);
-    app.textSize(16);
     app.textAlign(PApplet.CENTER, PApplet.CENTER);
-    app.text("SELECCIONAR MODULO", app.width / 2f, app.height * 0.12f);
+    dibujarTextoConBorde(app, "SELECCIONAR MODULO", app.width / 2f, app.height * 0.12f, 2);
 
     app.stroke(0, 120, 0);
     app.strokeWeight(1);
     app.line(50, app.height * 0.19f, app.width - 50, app.height * 0.19f);
 
+    app.textSize(10);
+    dibujarTextoConBorde(app, "W/S para navegar  |  ENTER para confirmar  |  ESC para volver",
+        app.width / 2f, app.height * 0.24f, 1);
     app.fill(255);
-    app.textSize(8);
     app.text("W/S para navegar  |  ENTER para confirmar  |  ESC para volver", app.width / 2f, app.height * 0.24f);
 
     for (Boton b : botonesModulos) b.dibujar(app);
@@ -107,8 +118,22 @@ public class PantallaSeleccion {
       app.fill(255);
       app.textSize(8);
       app.textAlign(PApplet.CENTER, PApplet.CENTER);
-      app.text("ERROR: " + mensajeError, app.width / 2f, app.height * 0.94f);
+      dibujarTextoConBorde(app, "ERROR: " + mensajeError, app.width / 2f, app.height * 0.94f, 1);
     }
+  }
+
+  private void dibujarTextoConBorde(PApplet app, String texto, float x, float y, int borde) {
+    app.fill(0);
+    for (int dx = -borde; dx <= borde; dx++) {
+      for (int dy = -borde; dy <= borde; dy++) {
+        if (dx != 0 || dy != 0) {
+          app.text(texto, x + dx, y + dy);
+        }
+      }
+    }
+
+    app.fill(255);
+    app.text(texto, x, y);
   }
 
   public String clicEnModulo(float mx, float my) {

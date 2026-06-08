@@ -1,17 +1,17 @@
-class Nave
+class SkyhawkNave
 {
   protected int x;
   protected int y;
   protected int vida;
 
-  Nave(int xPos, int yPos)
+  SkyhawkNave(int xPos, int yPos)
   {
     this.x = xPos;
     this.y = yPos;
   // vida inicial al cargarse
   }
 
-  // Las subclases (Skyhawk, Enemigo) sobrescriben estos metodos.
+  // Las subclases (SkyhawkJugador, SkyhawkEnemigo) sobrescriben estos metodos.
   void actualizar()
   {
   }

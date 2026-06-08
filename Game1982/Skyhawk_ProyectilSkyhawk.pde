@@ -1,7 +1,7 @@
 // La bala que dispara el avion del jugador: sube por la pantalla.
-class ProyectilSkyhawk extends Proyectil
+class SkyhawkProyectilJugador extends SkyhawkProyectil
 {
-  ProyectilSkyhawk(int xPos, int yPos)
+  SkyhawkProyectilJugador(int xPos, int yPos)
   {
     super(xPos, yPos);
   }

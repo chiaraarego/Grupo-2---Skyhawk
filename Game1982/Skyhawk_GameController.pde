@@ -1,23 +1,23 @@
-class GameController
+class SkyhawkGameController
 {
-  private Skyhawk skyhawk;                          // el avion del jugador
-  private ArrayList<Enemigo> enemigos;              // los aviones enemigos que caen
-  private ArrayList<ProyectilSkyhawk> balasJugador; // las balas que dispara el avion
-  private ArrayList<ProyectilEnemigo> balasEnemigo; // las balas que disparan los enemigos
-  private Registro_Estadistica_Sky registroEstadistica; // recolecta las stats de la partida
+  private SkyhawkJugador skyhawk;                          // el avion del jugador
+  private ArrayList<SkyhawkEnemigo> enemigos;              // los aviones enemigos que caen
+  private ArrayList<SkyhawkProyectilJugador> balasJugador; // las balas que dispara el avion
+  private ArrayList<SkyhawkProyectilEnemigo> balasEnemigo; // las balas que disparan los enemigos
+  private SkyhawkRegistroEstadistica registroEstadistica; // recolecta las stats de la partida
 
-  GameController()
+  SkyhawkGameController()
   {
     // "Cargar la partida": estado inicial
-    registroEstadistica = new Registro_Estadistica_Sky();
+    registroEstadistica = new SkyhawkRegistroEstadistica();
     // "Cargar el avion": centrado, en la parte de abajo
-    skyhawk = new Skyhawk(width / 2, height - 80);
+    skyhawk = new SkyhawkJugador(width / 2, height - 80);
     // "Cargar los enemigos": una lista de aviones que caen desde arriba
-    enemigos = new ArrayList<Enemigo>();
+    enemigos = new ArrayList<SkyhawkEnemigo>();
     crearEnemigos();
     // Las balas arrancan vacias
-    balasJugador = new ArrayList<ProyectilSkyhawk>();
-    balasEnemigo = new ArrayList<ProyectilEnemigo>();
+    balasJugador = new ArrayList<SkyhawkProyectilJugador>();
+    balasEnemigo = new ArrayList<SkyhawkProyectilEnemigo>();
   }
 
   // Crea varios enemigos repartidos arriba de la pantalla.
@@ -27,7 +27,7 @@ class GameController
     {
       int x = 100 + i * 100;   // separados: 100, 200, 300, 400, 500
       int y = -i * 120;        // escalonados arriba (negativo = todavia afuera)
-      enemigos.add(new Enemigo(x, y));
+      enemigos.add(new SkyhawkEnemigo(x, y));
     }
   }
 
@@ -50,7 +50,7 @@ class GameController
     skyhawk.actualizar();
 
     // Mover los enemigos (todos bajan) y, de vez en cuando, hacerlos disparar.
-    for (Enemigo e : enemigos)
+    for (SkyhawkEnemigo e : enemigos)
     {
       e.actualizar();
       if (e.intentaDisparar())
@@ -61,13 +61,13 @@ class GameController
     }
 
     // Mover las balas del jugador
-    for (ProyectilSkyhawk bala : balasJugador)
+    for (SkyhawkProyectilJugador bala : balasJugador)
     {
       bala.actualizarProyectil();
     }
 
     // Mover las balas de los enemigos
-    for (ProyectilEnemigo bala : balasEnemigo)
+    for (SkyhawkProyectilEnemigo bala : balasEnemigo)
     {
       bala.actualizarProyectil();
     }
@@ -79,11 +79,11 @@ class GameController
   void detectarColisiones()
   {
     // 1) Balas del jugador contra enemigos
-    ArrayList<ProyectilSkyhawk> balasQueSiguen = new ArrayList<ProyectilSkyhawk>();
-    for (ProyectilSkyhawk bala : balasJugador)
+    ArrayList<SkyhawkProyectilJugador> balasQueSiguen = new ArrayList<SkyhawkProyectilJugador>();
+    for (SkyhawkProyectilJugador bala : balasJugador)
     {
       boolean golpeo = false;
-      for (Enemigo e : enemigos)
+      for (SkyhawkEnemigo e : enemigos)
       {
         if (e.colisionaCon(bala.getX(), bala.getY()))
         {
@@ -105,7 +105,7 @@ class GameController
     balasJugador = balasQueSiguen;
 
     // 2) Enemigos contra el avion (choque)
-    for (Enemigo e : enemigos)
+    for (SkyhawkEnemigo e : enemigos)
     {
       if (skyhawk.colisionaCon(e.getX(), e.getY()))
       {
@@ -115,8 +115,8 @@ class GameController
     }
 
     // 3) Balas de los enemigos contra el avion del jugador
-    ArrayList<ProyectilEnemigo> balasEnemQueSiguen = new ArrayList<ProyectilEnemigo>();
-    for (ProyectilEnemigo bala : balasEnemigo)
+    ArrayList<SkyhawkProyectilEnemigo> balasEnemQueSiguen = new ArrayList<SkyhawkProyectilEnemigo>();
+    for (SkyhawkProyectilEnemigo bala : balasEnemigo)
     {
       boolean golpeo = false;
       if (skyhawk.colisionaCon(bala.getX(), bala.getY()))
@@ -142,19 +142,19 @@ class GameController
       // Teclas W A S D (letras normales)
       if (key == 'w')
       {
-        skyhawk.mover(Direccion.ARRIBA);
+        skyhawk.mover(SkyhawkDireccion.ARRIBA);
       }
       if (key == 's')
       {
-        skyhawk.mover(Direccion.ABAJO);
+        skyhawk.mover(SkyhawkDireccion.ABAJO);
       }
       if (key == 'a')
       {
-        skyhawk.mover(Direccion.IZQUIERDA);
+        skyhawk.mover(SkyhawkDireccion.IZQUIERDA);
       }
       if (key == 'd')
       {
-        skyhawk.mover(Direccion.DERECHA);
+        skyhawk.mover(SkyhawkDireccion.DERECHA);
       }
 
       // Flechas: son teclas "especiales". Processing avisa poniendo
@@ -163,19 +163,19 @@ class GameController
       {
         if (keyCode == UP)
         {
-          skyhawk.mover(Direccion.ARRIBA);
+          skyhawk.mover(SkyhawkDireccion.ARRIBA);
         }
         if (keyCode == DOWN)
         {
-          skyhawk.mover(Direccion.ABAJO);
+          skyhawk.mover(SkyhawkDireccion.ABAJO);
         }
         if (keyCode == LEFT)
         {
-          skyhawk.mover(Direccion.IZQUIERDA);
+          skyhawk.mover(SkyhawkDireccion.IZQUIERDA);
         }
         if (keyCode == RIGHT)
         {
-          skyhawk.mover(Direccion.DERECHA);
+          skyhawk.mover(SkyhawkDireccion.DERECHA);
         }
       }
     }
@@ -185,17 +185,17 @@ class GameController
   {
     skyhawk.dibujar();
     // Dibujar cada enemigo
-    for (Enemigo e : enemigos)
+    for (SkyhawkEnemigo e : enemigos)
     {
       e.dibujar();
     }
     // Dibujar cada bala del jugador
-    for (ProyectilSkyhawk bala : balasJugador)
+    for (SkyhawkProyectilJugador bala : balasJugador)
     {
       bala.dibujar();
     }
     // Dibujar cada bala de los enemigos
-    for (ProyectilEnemigo bala : balasEnemigo)
+    for (SkyhawkProyectilEnemigo bala : balasEnemigo)
     {
       bala.dibujar();
     }
@@ -207,7 +207,7 @@ class GameController
     text("Vida: " + skyhawk.getVida(), 10, 30);
   }
 
-  // Getter (encapsulamiento): el adaptador AvionSkyhawk arma las estadisticas
+  // Getter (encapsulamiento): el adaptador ModuloSkyhawk arma las estadisticas
   // leyendo el registro de la partida a traves de este metodo.
-  public Registro_Estadistica_Sky getRegistroEstadistica() { return this.registroEstadistica; }
+  public SkyhawkRegistroEstadistica getRegistroEstadistica() { return this.registroEstadistica; }
 }

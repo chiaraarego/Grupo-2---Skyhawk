@@ -1,14 +1,14 @@
-class Enemigo extends Nave
+class SkyhawkEnemigo extends SkyhawkNave
 {
   private int velocidad;   // cuantos pixeles baja en cada paso
   private PImage sprite;   // el dibujo del enemigo
 
-  Enemigo(int xPos, int yPos)
+  SkyhawkEnemigo(int xPos, int yPos)
   {
     super(xPos, yPos);
     this.velocidad = 2;   // velocidad de caida
     this.vida = 1;        // los enemigos mueren de un solo tiro
-    this.sprite = loadImage("EnemigoSprite.png");   // se carga una sola vez
+    this.sprite = loadImage("skyhawk_enemigo.png");   // se carga una sola vez
     this.sprite.resize(90, 60);   // la achico una vez para que dibujarla sea rapido
   }
 
@@ -33,11 +33,11 @@ class Enemigo extends Nave
   }
 
   // Crea una bala nueva abajo del enemigo y la devuelve.
-  // El GameController es el que la guarda en su lista de balas
+  // El SkyhawkGameController es el que la guarda en su lista de balas
   // (mismo criterio que el disparo del jugador).
-  ProyectilEnemigo disparar()
+  SkyhawkProyectilEnemigo disparar()
   {
-    return new ProyectilEnemigo(this.x, this.y + 20);
+    return new SkyhawkProyectilEnemigo(this.x, this.y + 20);
   }
 
   // Lo manda de vuelta arriba, en una columna al azar y con la vida llena.

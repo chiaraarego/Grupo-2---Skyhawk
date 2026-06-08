@@ -1,8 +1,8 @@
 // La bala que disparan los enemigos: baja por la pantalla.
-// La crea el GameController cuando un enemigo decide disparar (Enemigo.intentaDisparar()).
-class ProyectilEnemigo extends Proyectil
+// La crea el SkyhawkGameController cuando un enemigo decide disparar (SkyhawkEnemigo.intentaDisparar()).
+class SkyhawkProyectilEnemigo extends SkyhawkProyectil
 {
-  ProyectilEnemigo(int xPos, int yPos)
+  SkyhawkProyectilEnemigo(int xPos, int yPos)
   {
     super(xPos, yPos);
   }

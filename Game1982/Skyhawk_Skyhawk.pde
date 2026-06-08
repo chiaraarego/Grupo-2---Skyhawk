@@ -1,47 +1,47 @@
-class Skyhawk extends Nave
+class SkyhawkJugador extends SkyhawkNave
 {
   private int velocidad;   // cuantos pixeles avanza en cada paso
   private PImage sprite;   // el dibujo del avion
 
-  Skyhawk(int xPos, int yPos)
+  SkyhawkJugador(int xPos, int yPos)
   {
     super(xPos, yPos);
     this.velocidad = 5;   // velocidad inicial al cargarse
     this.vida = 3;        // vida inicial
-    this.sprite = loadImage("SkyhawkSprite.png");   // se carga una sola vez
+    this.sprite = loadImage("skyhawk_avion.png");   // se carga una sola vez
     this.sprite.resize(90, 60);   // la achico una vez para que dibujarla sea rapido
   }
 
   void actualizar()
   {
-    // El movimiento lo dispara el GameController cuando lee el teclado
+    // El movimiento lo dispara el SkyhawkGameController cuando lee el teclado
     // (llama a mover(...)). Por eso aca todavia no hay nada propio.
   }
 
   // Crea una bala nueva en la punta del avion (arriba) y la devuelve.
-  // El GameController es el que la guarda en su lista de balas.
-  ProyectilSkyhawk disparar()
+  // El SkyhawkGameController es el que la guarda en su lista de balas.
+  SkyhawkProyectilJugador disparar()
   {
-    return new ProyectilSkyhawk(this.x, this.y - 20);
+    return new SkyhawkProyectilJugador(this.x, this.y - 20);
   }
 
   // Mueve el avion un paso en la direccion indicada,
   // sin dejar que se salga de la pantalla.
-  void mover(Direccion direccion)
+  void mover(SkyhawkDireccion direccion)
   {
-    if (direccion == Direccion.ARRIBA)
+    if (direccion == SkyhawkDireccion.ARRIBA)
     {
       this.y = this.y - this.velocidad;
     }
-    if (direccion == Direccion.ABAJO)
+    if (direccion == SkyhawkDireccion.ABAJO)
     {
       this.y = this.y + this.velocidad;
     }
-    if (direccion == Direccion.IZQUIERDA)
+    if (direccion == SkyhawkDireccion.IZQUIERDA)
     {
       this.x = this.x - this.velocidad;
     }
-    if (direccion == Direccion.DERECHA)
+    if (direccion == SkyhawkDireccion.DERECHA)
     {
       this.x = this.x + this.velocidad;
     }
