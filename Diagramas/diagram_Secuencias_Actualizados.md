@@ -42,33 +42,33 @@ sequenceDiagram
 sequenceDiagram
     actor Jugador
     participant AvionSkyhawk
-    participant GameController
-    participant Skyhawk
+    participant SkyhawkGameController
+    participant SkyhawkJugador
 
     Jugador ->> +AvionSkyhawk : actualizar()
 
-    AvionSkyhawk ->> +GameController : actualizarMovimiento()
+    AvionSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
 
     %% Abre la activación interna para leer el teclado
-    GameController ->> +GameController : leerTeclado()
+    SkyhawkGameController ->> +SkyhawkGameController : leerTeclado()
 
     alt tecla ARRIBA
-        GameController ->> +Skyhawk : mover(Direccion.ARRIBA)
-        Skyhawk -->> -GameController : Se mueve arriba
+        SkyhawkGameController ->> +SkyhawkJugador : mover(Direccion.ARRIBA)
+        SkyhawkJugador -->> -SkyhawkGameController : Se mueve arriba
     else tecla ABAJO
-        GameController ->> +Skyhawk : mover(Direccion.ABAJO)
-        Skyhawk -->> -GameController : Se mueve abajo
+        SkyhawkGameController ->> +SkyhawkJugador : mover(Direccion.ABAJO)
+        SkyhawkJugador -->> -SkyhawkGameController : Se mueve abajo
     else tecla IZQUIERDA
-        GameController ->> +Skyhawk : mover(Direccion.IZQUIERDA)
-        Skyhawk -->> -GameController : Se mueve izquierda
+        SkyhawkGameController ->> +SkyhawkJugador : mover(Direccion.IZQUIERDA)
+        SkyhawkJugador -->> -SkyhawkGameController : Se mueve izquierda
     else tecla DERECHA
-        GameController ->> +Skyhawk : mover(Direccion.DERECHA)
-        Skyhawk -->> -GameController : Se mueve derecha
+        SkyhawkGameController ->> +SkyhawkJugador : mover(Direccion.DERECHA)
+        SkyhawkJugador -->> -SkyhawkGameController : Se mueve derecha
     end
 
     
     %% Retorna el flujo al objeto principal de la app
-    GameController -->> -AvionSkyhawk : Movimiento actualizado
+    SkyhawkGameController -->> -AvionSkyhawk : Movimiento actualizado
 
     %% RESPUESTA FINAL AL JUGADOR:
     AvionSkyhawk -->> -Jugador : actualiza posición del avión en pantalla
