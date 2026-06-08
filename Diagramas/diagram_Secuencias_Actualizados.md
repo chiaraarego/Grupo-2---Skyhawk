@@ -137,13 +137,13 @@ sequenceDiagram
 ## 4. Morir por colisión 
 ```mermaid
 sequenceDiagram
-    participant AvionSkyhawk
+    participant ModuloSkyhawk
     participant SkyhawkGameController
     participant SkyhawkEnemigo
     participant SkyhawkJugador
 
     loop actualización del juego
-        AvionSkyhawk ->> +SkyhawkGameController : detectarColisiones()
+        ModuloSkyhawk ->> +SkyhawkGameController : detectarColisiones()
 
 
 
@@ -164,13 +164,13 @@ sequenceDiagram
             SkyhawkEnemigo -->> -SkyhawkGameController : Enemigo reaparece
         end
 
-        SkyhawkGameController -->> -AvionSkyhawk : 
-    AvionSkyhawk ->> +SkyhawkGameController : jugadorVivo()
+        SkyhawkGameController -->> -ModuloSkyhawk : 
+    ModuloSkyhawk ->> +SkyhawkGameController : jugadorVivo()
     SkyhawkGameController ->> +SkyhawkJugador : estaVivo()
     SkyhawkJugador -->> -SkyhawkGameController : false
-    SkyhawkGameController -->> -AvionSkyhawk : false
+    SkyhawkGameController -->> -ModuloSkyhawk : false
 end
-        AvionSkyhawk ->> AvionSkyhawk : finalizar()
+        ModuloSkyhawk ->> ModuloSkyhawk : finalizar()
     
 
 ```
@@ -226,37 +226,37 @@ ModuloSkyhawk ->> +ModuloSkyhawk : finalizar()
 ## 6. Estadisticas
 ```mermaid
 sequenceDiagram
-    participant AvionSkyhawk
-    participant GameController
-    participant Registro_Estadistica_Sky
+    participant ModuloSkyhawk
+    participant SkyhawkGameController
+    participant SkyhawkRegistroEstadistica
     participant EstadisticasGenerales
 
-    AvionSkyhawk ->> +AvionSkyhawk : finalizar()
+    ModuloSkyhawk ->> +ModuloSkyhawk : finalizar()
 
-    AvionSkyhawk ->> +GameController : getRegistroEstadistica()
+    ModuloSkyhawk ->> +SkyhawkGameController : getRegistroEstadistica()
 
-    GameController ->> +Registro_Estadistica_Sky : getPuntaje()
-    Registro_Estadistica_Sky -->> -GameController : puntaje
+    SkyhawkGameController ->> +SkyhawkRegistroEstadistica : getPuntaje()
+    SkyhawkRegistroEstadistica -->> -SkyhawkGameController : puntaje
 
-    GameController ->> +Registro_Estadistica_Sky : getEnemigosEliminados()
-    Registro_Estadistica_Sky -->> -GameController : enemigosEliminados
+    SkyhawkGameController ->> +SkyhawkRegistroEstadistica : getEnemigosEliminados()
+    SkyhawkRegistroEstadistica -->> -SkyhawkGameController : enemigosEliminados
 
-    GameController ->> +Registro_Estadistica_Sky : getPartidasJugadas()
-    Registro_Estadistica_Sky -->> -GameController : partidasJugadas
+    SkyhawkGameController ->> +SkyhawkRegistroEstadistica : getPartidasJugadas()
+    SkyhawkRegistroEstadistica -->> -SkyhawkGameController : partidasJugadas
 
-    GameController ->> +Registro_Estadistica_Sky : getTiempoJugado()
-    Registro_Estadistica_Sky -->> -GameController : tiempoJugado
+    SkyhawkGameController ->> +SkyhawkRegistroEstadistica : getTiempoJugado()
+    SkyhawkRegistroEstadistica -->> -SkyhawkGameController : tiempoJugado
 
-    GameController ->> +Registro_Estadistica_Sky : getSituacionPartida()
-    Registro_Estadistica_Sky -->> -GameController : situacionPartida
+    SkyhawkGameController ->> +SkyhawkRegistroEstadistica : getSituacionPartida()
+    SkyhawkRegistroEstadistica -->> -SkyhawkGameController : situacionPartida
 
 
-    GameController ->> +EstadisticasGenerales : crear EstadisticasGenerales
-    EstadisticasGenerales -->> -GameController : estadisticasGenerales
+    SkyhawkGameController ->> +EstadisticasGenerales : crear EstadisticasGenerales
+    EstadisticasGenerales -->> -SkyhawkGameController : estadisticasGenerales
 
     EstadisticasGenerales -->> GameController : registroEstadistica
-    GameController -->> AvionSkyhawk : registroEstadistica
+    GameController -->> ModuloSkyhawk : registroEstadistica
 
-    AvionSkyhawk -->> -AvionSkyhawk :
+    ModuloSkyhawk -->> -ModuloSkyhawk :
 
 ```
