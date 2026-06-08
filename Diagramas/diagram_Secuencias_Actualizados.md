@@ -54,16 +54,16 @@ sequenceDiagram
 
     alt tecla ARRIBA
         GameController ->> +Skyhawk : mover(Direccion.ARRIBA)
-        Skyhawk -->> -GameController : this.y = this.y - this.velocidad
+        Skyhawk -->> -GameController : Se mueve arriba
     else tecla ABAJO
         GameController ->> +Skyhawk : mover(Direccion.ABAJO)
-        Skyhawk -->> -GameController : this.y = this.y + this.velocidad
+        Skyhawk -->> -GameController : Se mueve abajo
     else tecla IZQUIERDA
         GameController ->> +Skyhawk : mover(Direccion.IZQUIERDA)
-        Skyhawk -->> -GameController : this.x = this.x - this.velocidad
+        Skyhawk -->> -GameController : Se mueve izquierda
     else tecla DERECHA
         GameController ->> +Skyhawk : mover(Direccion.DERECHA)
-        Skyhawk -->> -GameController : this.x = this.x + this.velocidad
+        Skyhawk -->> -GameController : Se mueve derecha
     end
 
     
@@ -84,6 +84,7 @@ sequenceDiagram
     participant Skyhawk
     participant ProyectilSkyhawk
     participant Enemigo
+    participant Registro_Estadistica_Sky
 
     Jugador ->> +AvionSkyhawk : actualizar()
 
@@ -100,7 +101,7 @@ sequenceDiagram
         AvionSkyhawk ->> +GameController : actualizarMovimiento()
 
         GameController ->> +ProyectilSkyhawk : actualizarProyectil()
-        ProyectilSkyhawk -->> -GameController : this.y = this.y - this.velocidad
+        ProyectilSkyhawk -->> -GameController : Posicion actualizada
 
         GameController ->> +GameController : detectarColisiones()
 
@@ -110,23 +111,26 @@ sequenceDiagram
         GameController ->> +ProyectilSkyhawk : getY()
         ProyectilSkyhawk -->> -GameController : y
 
-        alt proyectil impacta al enemigo
         GameController ->> +Enemigo : colisionaCon(x, y)
         Enemigo -->> -GameController : true
 
-            GameController ->> +Enemigo : recibirDanio(1)
-            Enemigo -->> -GameController : this.vida = this.vida - 1
+        opt proyectil impacta al enemigo
+            GameController -) +Enemigo : recibirDanio(1)
             
             GameController ->> +Enemigo : estaViva()
             Enemigo -->> -GameController : false
+
+            GameController -) +Registro_Estadistica_Sky : registrarEnemigoEliminado()
+            GameController ->> +Enemigo : reaparecer()
+            Enemigo -->> -GameController : Enemigo reaparece
+            
         end
 
-        GameController -->> -GameController : colisión procesada
 
         GameController -->> -AvionSkyhawk : juego actualizado
         
         %% Respuesta visual en cada vuelta del loop para avisar al jugador
-            AvionSkyhawk -->> Jugador : Muere enemigo
+            AvionSkyhawk -->> Jugador : Muere enemigo y reaparece (+10 pts)
     end
 ```
 
@@ -139,12 +143,9 @@ sequenceDiagram
     participant Skyhawk
 
     loop actualización del juego
-        AvionSkyhawk ->> +GameController : actualizarMovimiento()
+        AvionSkyhawk ->> +GameController : detectarColisiones()
 
-        GameController ->> +Enemigo : actualizar()
-        Enemigo -->> -GameController : 
 
-        GameController ->> +GameController : detectarColisiones()
 
         GameController ->> +Enemigo : getX()
         Enemigo -->> -GameController : x
@@ -152,67 +153,73 @@ sequenceDiagram
         GameController ->> +Enemigo : getY()
         Enemigo -->> -GameController : y
 
-        alt enemigo choca con Skyhawk
+        opt enemigo choca con Skyhawk
         GameController ->> +Skyhawk : colisionaCon(x, y)
         Skyhawk -->> -GameController : true
 
-            GameController ->> +Skyhawk : recibirDanio(1)
-            Skyhawk -->> -GameController : 
+            GameController -) +Skyhawk : recibirDanio(1)
+
+
+            GameController ->> +Enemigo : reaparecer()
+            Enemigo -->> -GameController : Enemigo reaparece
+        end
+
+        GameController -->> -AvionSkyhawk : 
+    AvionSkyhawk ->> +GameController : jugadorVivo()
+    GameController ->> +Skyhawk : estaVivo()
+    Skyhawk -->> -GameController : false
+    GameController -->> -AvionSkyhawk : false
+end
+        AvionSkyhawk ->> AvionSkyhawk : finalizar()
+    
+
+```
+## 5 Morir por proyectil enemigo
+```mermaid
+sequenceDiagram
+    participant AvionSkyhawk
+    participant GameController
+    participant Enemigo
+    participant ProyectilEnemigo
+    participant Skyhawk
+
+    loop actualización del juego
+        AvionSkyhawk ->> +GameController : actualizarMovimiento()
+
+        
+        GameController ->> +Enemigo : intentoDisparar()
+        Enemigo -->> -GameController : true
+        
+
+        opt enemigo dispara
+            GameController ->> +Enemigo : disparar()
+            Enemigo -->> -GameController : ProyectilEnemigo
+
+        end
+
+        GameController ->> +GameController : detectarColisiones()
+
+        GameController ->> +ProyectilEnemigo : getX()
+        ProyectilEnemigo -->> -GameController : x
+
+        GameController ->> +ProyectilEnemigo : getY()
+        ProyectilEnemigo -->> -GameController : y
+
+        opt proyectil enemigo impacta al Skyhawk
+            GameController ->> +Skyhawk : colisionaCon(x, y)
+            Skyhawk -->> -GameController : true
+
+            GameController -) +Skyhawk : recibirDanio(1)
 
             GameController ->> +Skyhawk : estaVivo()
             Skyhawk -->> -GameController : false
-
-            GameController ->> +Enemigo : desaparecer()
-            Enemigo -->> -GameController : 
         end
 
-        GameController -->> -GameController : 
-        GameController -->> -AvionSkyhawk : 
+        GameController -->> -AvionSkyhawk : Skyhawk muere
+
     end
+AvionSkyhawk ->> +AvionSkyhawk : finalizar()
 
-    AvionSkyhawk ->> +GameController : jugadorVivo()
-    GameController -->> -AvionSkyhawk : false
-
-    alt Skyhawk muerto
-        AvionSkyhawk ->> +AvionSkyhawk : finalizar()
-        AvionSkyhawk -->> -AvionSkyhawk : 
-    end
-```
-## 5 Pausar/Reanudar
-```mermaid
-sequenceDiagram
-    actor Jugador
-
-    participant AvionSkyhawk
-    participant GameController
-
-    Jugador ->> +AvionSkyhawk : pausar()
-
-
-    Note over AvionSkyhawk: estadoActual = PAUSADO
-
-    loop mientras está pausado
-        AvionSkyhawk ->> +AvionSkyhawk : actualizar(PApplet app)
-        AvionSkyhawk -->> -AvionSkyhawk : no actualiza GameController
-
-        AvionSkyhawk ->> +AvionSkyhawk : dibujar(PApplet app)
-        AvionSkyhawk -->> -AvionSkyhawk : muestra pantalla pausada
-    end
-
-    Jugador ->> +AvionSkyhawk : solicita reanudar
-
-    AvionSkyhawk ->> +AvionSkyhawk : reanudar()
-    AvionSkyhawk -->> -AvionSkyhawk : 
-
-    Note over AvionSkyhawk: estadoActual = EN_EJECUCION
-
-    loop juego reanudado
-        AvionSkyhawk ->> +GameController : actualizarMovimiento()
-        GameController -->> -AvionSkyhawk : 
-
-        AvionSkyhawk ->> +GameController : dibujar()
-        GameController -->> -AvionSkyhawk : 
-    end
 ```
 
 
