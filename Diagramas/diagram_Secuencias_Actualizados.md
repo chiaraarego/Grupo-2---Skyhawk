@@ -174,62 +174,56 @@ end
     
 
 ```
-## 5 Morir por proyectil enemigo
+
+## 5. Morir por proyectil enemigo
 ```mermaid
 sequenceDiagram
-    participant AvionSkyhawk
-    participant GameController
-    participant Enemigo
-    participant ProyectilEnemigo
-    participant Skyhawk
+    participant ModuloSkyhawk
+    participant SkyhawkGameController
+    participant SkyhawkEnemigo
+    participant SkyhawkProyectilEnemigo
+    participant SkyhawkJugador
 
     loop actualización del juego
-        AvionSkyhawk ->> +GameController : actualizarMovimiento()
+        ModuloSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
 
         
-        GameController ->> +Enemigo : intentoDisparar()
-        Enemigo -->> -GameController : true
+        SkyhawkGameController ->> +SkyhawkEnemigo : intentoDisparar()
+        SkyhawkEnemigo -->> -SkyhawkGameController : true
         
 
         opt enemigo dispara
-            GameController ->> +Enemigo : disparar()
-            Enemigo -->> -GameController : ProyectilEnemigo
+            SkyhawkGameController ->> +SkyhawkEnemigo : disparar()
+            SkyhawkEnemigo -->> -SkyhawkGameController : SkyhawkProyectilEnemigo
 
         end
 
-        GameController ->> +GameController : detectarColisiones()
+        SkyhawkGameController ->> +SkyhawkGameController : detectarColisiones()
 
-        GameController ->> +ProyectilEnemigo : getX()
-        ProyectilEnemigo -->> -GameController : x
+        SkyhawkGameController ->> +SkyhawkProyectilEnemigo : getX()
+        SkyhawkProyectilEnemigo -->> -SkyhawkGameController : x
 
-        GameController ->> +ProyectilEnemigo : getY()
-        ProyectilEnemigo -->> -GameController : y
+        SkyhawkGameController ->> +SkyhawkProyectilEnemigo : getY()
+        SkyhawkProyectilEnemigo -->> -SkyhawkGameController : y
 
         opt proyectil enemigo impacta al Skyhawk
-            GameController ->> +Skyhawk : colisionaCon(x, y)
-            Skyhawk -->> -GameController : true
+            SkyhawkGameController ->> +SkyhawkJugador : colisionaCon(x, y)
+            SkyhawkJugador -->> -SkyhawkGameController : true
 
-            GameController -) +Skyhawk : recibirDanio(1)
+            SkyhawkGameController -) +SkyhawkJugador : recibirDanio(1)
 
-            GameController ->> +Skyhawk : estaVivo()
-            Skyhawk -->> -GameController : false
+            SkyhawkGameController ->> +SkyhawkJugador : estaVivo()
+            SkyhawkJugador -->> -SkyhawkGameController : false
         end
 
-        GameController -->> -AvionSkyhawk : Skyhawk muere
+        SkyhawkGameController -->> -ModuloSkyhawk : Skyhawk muere
 
     end
-AvionSkyhawk ->> +AvionSkyhawk : finalizar()
+ModuloSkyhawk ->> +ModuloSkyhawk : finalizar()
 
 ```
 
-
-
-
-
-
-
-
-## 6 Estadisticas
+## 6. Estadisticas
 ```mermaid
 sequenceDiagram
     participant AvionSkyhawk
