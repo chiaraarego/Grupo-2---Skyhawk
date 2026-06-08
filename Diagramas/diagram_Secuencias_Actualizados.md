@@ -8,29 +8,29 @@ sequenceDiagram
     actor Jugador
 
     participant AvionSkyhawk
-    participant GameController
-    participant Skyhawk
-    participant Enemigo
+    participant SkyhawkGameController
+    participant SkyhawkJugador
+    participant SkyhawkEnemigo
 
     Jugador ->> +AvionSkyhawk : iniciar()
 
     %% Crea el controlador del juego
-    AvionSkyhawk ->> +GameController : GameController()
+    AvionSkyhawk ->> +SkyhawkGameController : SkyhawkGameController()
 
     %% El controlador crea al avión del jugador
-    GameController ->> +Skyhawk : Skyhawk(xPos, yPos)
-    Skyhawk -->> -GameController : avion creado
+    SkyhawkGameController ->> +SkyhawkJugador : SkyhawkJugador(xPos, yPos)
+    SkyhawkJugador -->> -SkyhawkGameController : avion creado
 
     %% El controlador se auto-llama para crear la horda de enemigos
-    GameController ->> +GameController : crearEnemigos()
+    SkyhawkGameController ->> +SkyhawkGameController : crearEnemigos()
 
     loop por cada enemigo inicial
-        GameController ->> +Enemigo : Enemigo(xPos, yPos)
-        Enemigo -->> -GameController : Enemigo creado
+        SkyhawkGameController ->> +SkyhawkEnemigo : SkyhawkEnemigo(xPos, yPos)
+        SkyhawkEnemigo -->> -SkyhawkGameController : Enemigo creado
     end
 
     %% Van cerrándose ordenadamente las ejecuciones abiertas de atrás hacia adelante
-    GameController -->> -AvionSkyhawk : controlador listo
+    SkyhawkGameController -->> -AvionSkyhawk : controlador listo
     
     %% RESPUESTA FINAL AL JUGADOR:
     AvionSkyhawk -->> -Jugador : muestra pantalla de juego (render)
