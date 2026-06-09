@@ -45,7 +45,8 @@ sequenceDiagram
     participant SkyhawkGameController
     participant SkyhawkJugador
 
-    Jugador ->> +ModuloSkyhawk : actualizar()
+    Jugador ->> ModuloSkyhawk : [presiona tecla]
+    ModuloSkyhawk ->> +ModuloSkyhawk : actualizar()
 
     ModuloSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
 
