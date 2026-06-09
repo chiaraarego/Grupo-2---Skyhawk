@@ -225,7 +225,7 @@ sequenceDiagram
     deactivate ModuloSkyhawk
 ```
 
-## 6. Estadisticas Nuevo
+## 6. Estadisticas 
 ```mermaid
 sequenceDiagram
     participant HomeJuego
