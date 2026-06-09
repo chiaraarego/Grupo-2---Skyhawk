@@ -274,6 +274,8 @@ sequenceDiagram
     participant Stats as EstadisticasGenerales
     participant Gestor as GestorEstadisticas
 
+    activate HomeJuego
+
     HomeJuego ->> ModuloSkyhawk: actualizar(app)
     activate ModuloSkyhawk
 
@@ -338,4 +340,5 @@ sequenceDiagram
     HomeJuego ->> Gestor: guardarEstadisticas(stats)
     activate Gestor
     deactivate Gestor
+    deactivate HomeJuego
 ```
