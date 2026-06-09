@@ -142,6 +142,8 @@ sequenceDiagram
     participant SkyhawkEnemigo
     participant SkyhawkJugador
 
+    activate ModuloSkyhawk
+
     loop actualización del juego
         ModuloSkyhawk ->> +SkyhawkGameController : detectarColisiones()
 
@@ -172,7 +174,7 @@ sequenceDiagram
 end
         ModuloSkyhawk ->> ModuloSkyhawk : finalizar()
     
-
+    deactivate ModuloSkyhawk
 ```
 
 ## 5. Morir por proyectil enemigo
