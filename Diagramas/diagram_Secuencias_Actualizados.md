@@ -142,11 +142,12 @@ sequenceDiagram
     participant SkyhawkEnemigo
     participant SkyhawkJugador
 
-    activate ModuloSkyhawk
+    
 
     loop actualización del juego
-        ModuloSkyhawk ->> +SkyhawkGameController : detectarColisiones()
 
+        ModuloSkyhawk ->> +SkyhawkGameController : detectarColisiones()
+       activate ModuloSkyhawk
 
 
         SkyhawkGameController ->> +SkyhawkEnemigo : getX()
