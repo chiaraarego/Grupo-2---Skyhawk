@@ -186,11 +186,11 @@ sequenceDiagram
     participant SkyhawkProyectilEnemigo
     participant SkyhawkJugador
 
-    activate ModuloSkyhawk
+
 
     loop actualización del juego
         ModuloSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
-
+    activate ModuloSkyhawk
         SkyhawkGameController ->> +SkyhawkEnemigo : intentoDisparar()
         SkyhawkEnemigo -->> -SkyhawkGameController : true
 
@@ -235,11 +235,11 @@ sequenceDiagram
     participant Stats as EstadisticasGenerales
     participant Gestor as GestorEstadisticas
 
-    activate HomeJuego
+
 
     HomeJuego ->> ModuloSkyhawk: actualizar(app)
     activate ModuloSkyhawk
-
+    activate HomeJuego
     ModuloSkyhawk ->> SkyhawkGameController: jugadorVivo()
     activate SkyhawkGameController
     SkyhawkGameController -->> ModuloSkyhawk: false
