@@ -98,6 +98,8 @@ sequenceDiagram
     ModuloSkyhawk -->> -Jugador : dibuja disparo en pantalla
 
     loop hasta que el proyectil impacta o sale de pantalla
+        activate ModuloSkyhawk
+
         ModuloSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
 
         SkyhawkGameController ->> +SkyhawkProyectilJugador : actualizarProyectil()
@@ -131,6 +133,7 @@ sequenceDiagram
         
         %% Respuesta visual en cada vuelta del loop para avisar al jugador
             ModuloSkyhawk -->> Jugador : Muere enemigo y reaparece (+10 pts)
+        deactivate ModuloSkyhawk
     end
 ```
 
