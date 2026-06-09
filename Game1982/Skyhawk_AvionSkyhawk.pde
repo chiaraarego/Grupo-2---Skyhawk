@@ -2,10 +2,7 @@
 // Adaptador que conecta nuestro juego (SkyhawkGameController) con el lobby del grupo.
 // Implementa el contrato ModuloJuego delegando toda la logica en SkyhawkGameController.
 //
-// Es .pde a proposito: asi nuestras clases (SkyhawkJugador, SkyhawkEnemigo, SkyhawkProyectil, ...)
-// quedan como inner classes del sketch Game1982 y siguen usando las funciones
-// globales de Processing (image, rect, width, height, key, keyPressed, ...)
-// sin tener que prefijar nada con "app.".
+
 
 import processing.core.PApplet;
 import java.util.ArrayList;
