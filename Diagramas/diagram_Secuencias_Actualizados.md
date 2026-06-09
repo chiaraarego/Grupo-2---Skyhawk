@@ -225,45 +225,6 @@ sequenceDiagram
     deactivate ModuloSkyhawk
 ```
 
-## 6. Estadisticas
-```mermaid
-sequenceDiagram
-    participant ModuloSkyhawk
-    participant SkyhawkGameController
-    participant SkyhawkRegistroEstadistica
-    participant EstadisticasGenerales
-
-    ModuloSkyhawk ->> +ModuloSkyhawk : finalizar()
-
-    ModuloSkyhawk ->> +SkyhawkGameController : getRegistroEstadistica()
-
-    SkyhawkGameController ->> +SkyhawkRegistroEstadistica : getPuntaje()
-    SkyhawkRegistroEstadistica -->> -SkyhawkGameController : puntaje
-
-    SkyhawkGameController ->> +SkyhawkRegistroEstadistica : getEnemigosEliminados()
-    SkyhawkRegistroEstadistica -->> -SkyhawkGameController : enemigosEliminados
-
-    SkyhawkGameController ->> +SkyhawkRegistroEstadistica : getPartidasJugadas()
-    SkyhawkRegistroEstadistica -->> -SkyhawkGameController : partidasJugadas
-
-    SkyhawkGameController ->> +SkyhawkRegistroEstadistica : getTiempoJugado()
-    SkyhawkRegistroEstadistica -->> -SkyhawkGameController : tiempoJugado
-
-    SkyhawkGameController ->> +SkyhawkRegistroEstadistica : getSituacionPartida()
-    SkyhawkRegistroEstadistica -->> -SkyhawkGameController : situacionPartida
-
-
-    SkyhawkGameController ->> +EstadisticasGenerales : crear EstadisticasGenerales
-    EstadisticasGenerales -->> -SkyhawkGameController : estadisticasGenerales
-
-    EstadisticasGenerales -->> GameController : registroEstadistica
-    GameController -->> ModuloSkyhawk : registroEstadistica
-
-    ModuloSkyhawk -->> -ModuloSkyhawk :
-
-```
-
-
 ## 6. Estadisticas Nuevo
 ```mermaid
 sequenceDiagram
