@@ -191,15 +191,12 @@ sequenceDiagram
     loop actualización del juego
         ModuloSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
 
-        
         SkyhawkGameController ->> +SkyhawkEnemigo : intentoDisparar()
         SkyhawkEnemigo -->> -SkyhawkGameController : true
-        
 
         opt enemigo dispara
             SkyhawkGameController ->> +SkyhawkEnemigo : disparar()
             SkyhawkEnemigo -->> -SkyhawkGameController : SkyhawkProyectilEnemigo
-
         end
 
         SkyhawkGameController ->> +SkyhawkGameController : detectarColisiones()
@@ -221,12 +218,11 @@ sequenceDiagram
         end
 
         SkyhawkGameController -->> -ModuloSkyhawk : Skyhawk muere
-
     end
-ModuloSkyhawk ->> +ModuloSkyhawk : finalizar()
+
+    ModuloSkyhawk ->> ModuloSkyhawk : finalizar()
 
     deactivate ModuloSkyhawk
-
 ```
 
 ## 6. Estadisticas
