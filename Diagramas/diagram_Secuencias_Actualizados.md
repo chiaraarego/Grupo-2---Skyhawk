@@ -186,6 +186,8 @@ sequenceDiagram
     participant SkyhawkProyectilEnemigo
     participant SkyhawkJugador
 
+    activate ModuloSkyhawk
+
     loop actualización del juego
         ModuloSkyhawk ->> +SkyhawkGameController : actualizarMovimiento()
 
@@ -222,6 +224,8 @@ sequenceDiagram
 
     end
 ModuloSkyhawk ->> +ModuloSkyhawk : finalizar()
+
+    deactivate ModuloSkyhawk
 
 ```
 
