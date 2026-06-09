@@ -1,4 +1,4 @@
-# Diagrama de clases — Módulo Skyhawk
+# Diagrama de Secuencia — Módulo Skyhawk
 
 Basado en el diagrama de clases 
 
